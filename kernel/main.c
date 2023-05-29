@@ -19,10 +19,9 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <kernel/arch/mmu.h>
 #include <kernel/device.h>
 
-static void initialize_devices(void)
+static void _initialize_devices(void)
 {
     for (const DeviceInitializer* func = &__device_initializer_start;
             func < &__device_initializer_end; ++func) {
@@ -30,7 +29,7 @@ static void initialize_devices(void)
     }
 }
 
-static void finalize_devices(void)
+static void _finalize_devices(void)
 {
     for (const DeviceFinalizer* func = &__device_finalizer_start;
             func < &__device_finalizer_end; ++func) {
@@ -40,8 +39,8 @@ static void finalize_devices(void)
 
 int main(void)
 {
-    initialize_devices();
+    _initialize_devices();
 
-    finalize_devices();
+    _finalize_devices();
     return 0;
 }

@@ -189,11 +189,11 @@
 
 // Field accessors
 #define READ_FIELD(uart, reg, field) \
-    ((read_register(uart, (reg ## _INDEX)) & \
+    ((_read_register(uart, (reg ## _INDEX)) & \
             (reg ## _ ## field ## _MASK)) >> \
         (reg ## _ ## field ## _OFFSET))
 #define WRITE_FIELD(uart, reg, field, value) \
-    (write_register(uart, (reg ## _INDEX), \
+    (_write_register(uart, (reg ## _INDEX), \
         (READ_FIELD(uart, reg, field) & \
              ~(reg ## _ ## field ## _MASK)) | \
         (((value) << (reg ## _ ## field ## _OFFSET)) & \
@@ -206,28 +206,29 @@ typedef struct
     size_t register_width;
 } Uart;
 
-static const Uart uart0 = {
+static const Uart _uart0 = {
     .base = (uint8_t*)UART0_BASE,
     .size = (size_t)UART0_SIZE,
     .register_width = UART0_REGISTER_WIDTH,
 };
 
-static volatile uint8_t* get_register_address(const Uart* uart, uint8_t index)
+static volatile uint8_t* _get_register_address(const Uart* uart,
+        uint8_t index)
 {
     return uart->base + index * uart->register_width;
 }
 
-static uint8_t read_register(const Uart* uart, uint8_t index)
+static uint8_t _read_register(const Uart* uart, uint8_t index)
 {
-    return *get_register_address(uart, index);
+    return *_get_register_address(uart, index);
 }
 
-static void write_register(const Uart* uart, uint8_t index, uint8_t value)
+static void _write_register(const Uart* uart, uint8_t index, uint8_t value)
 {
-    *get_register_address(uart, index) = value;
+    *_get_register_address(uart, index) = value;
 }
 
-static bool try_receive(const Uart* uart, uint8_t* chr)
+static bool _try_receive(const Uart* uart, uint8_t* chr)
 {
     if (READ_FIELD(uart, LSR, RBR)) {
         *chr = READ_FIELD(uart, RBR, CHR);
@@ -236,7 +237,7 @@ static bool try_receive(const Uart* uart, uint8_t* chr)
     return false;
 }
 
-static size_t receive_buffer(const Uart* uart, uint8_t* data, size_t size)
+static size_t _receive_buffer(const Uart* uart, uint8_t* data, size_t size)
 {
     if (uart == NULL || data == NULL) {
         return 0;
@@ -244,14 +245,14 @@ static size_t receive_buffer(const Uart* uart, uint8_t* data, size_t size)
 
     uint8_t chr;
     size_t i = 0;
-    while (i < size && try_receive(uart, &chr)) {
+    while (i < size && _try_receive(uart, &chr)) {
         data[i] = chr;
         ++i;
     }
     return i;
 }
 
-static bool transmit(const Uart* uart, uint8_t chr)
+static bool _transmit(const Uart* uart, uint8_t chr)
 {
     if (READ_FIELD(uart, LSR, THR)) {
         WRITE_FIELD(uart, THR, CHR, chr);
@@ -260,7 +261,7 @@ static bool transmit(const Uart* uart, uint8_t chr)
     return false;
 }
 
-static size_t transmit_buffer(const Uart* uart, const uint8_t* data,
+static size_t _transmit_buffer(const Uart* uart, const uint8_t* data,
         size_t size)
 {
     if (uart == NULL || data == NULL) {
@@ -269,57 +270,58 @@ static size_t transmit_buffer(const Uart* uart, const uint8_t* data,
 
     size_t i = 0;
     for (; i < size; ++i) {
-        if (!transmit(uart, data[i])) {
+        if (!_transmit(uart, data[i])) {
             return size;
         }
     }
     return size;
 }
 
-static void console_activate(const Console* console)
+static void _activate_console(const Console* console)
 {
     (void)console;
 }
 
-static void console_deactivate(const Console* console)
+static void _deactivate_console(const Console* console)
 {
     (void)console;
 }
 
-static size_t console_read(const Console* console, char* data, size_t size)
+static size_t _read_from_console(const Console* console, char* data,
+        size_t size)
 {
-    return receive_buffer(console->tag, (uint8_t*)data, size);
+    return _receive_buffer(console->tag, (uint8_t*)data, size);
 }
 
-static size_t console_write(const Console* console, const char* data)
+static size_t _write_to_console(const Console* console, const char* data)
 {
-    return transmit_buffer(console->tag, (const uint8_t*)data, strlen(data));
+    return _transmit_buffer(console->tag, (const uint8_t*)data, strlen(data));
 }
 
-static bool console_put(const Console* console, char chr)
+static bool _put_to_console(const Console* console, char chr)
 {
-    return transmit(console->tag, chr);
+    return _transmit(console->tag, chr);
 }
 
-static const Console uart0_console = {
-    .name = "uart0",
-    .tag = &uart0,
-    .activate = console_activate,
-    .deactivate = console_deactivate,
-    .read = console_read,
-    .write = console_write,
-    .put = console_put,
+static const Console _uart0_console = {
+    .name = "_uart0",
+    .tag = &_uart0,
+    .activate = _activate_console,
+    .deactivate = _deactivate_console,
+    .read = _read_from_console,
+    .write = _write_to_console,
+    .put = _put_to_console,
 };
 
-static void initialize(void)
+static void _initialize(void)
 {
-    register_console(&uart0_console);
+    register_console(&_uart0_console);
 }
 
-static void finalize(void)
+static void _finalize(void)
 {
-    deregister_console(&uart0_console);
+    deregister_console(&_uart0_console);
 }
 
-DEVICE_INITIALIZER(ns16550a, initialize);
-DEVICE_FINALIZER(ns16550a, finalize);
+DEVICE_INITIALIZER(ns16550a, _initialize);
+DEVICE_FINALIZER(ns16550a, _finalize);

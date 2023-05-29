@@ -30,7 +30,7 @@
 extern uint8_t* __bss_start;
 extern uint8_t* __bss_end;
 
-static void initialize_bss(void)
+static void _initialize_bss(void)
 {
     memset(__bss_start, 0, __bss_end - __bss_start);
 }
@@ -40,7 +40,7 @@ noreturn void _start(size_t hart_id, void* device_tree)
     (void)hart_id;
     (void)device_tree;
 
-    initialize_bss();
+    _initialize_bss();
 
     const int exit_code = main();
     (void)exit_code;
