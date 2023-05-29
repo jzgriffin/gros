@@ -24,6 +24,8 @@
 
 #include <stddef.h>
 
+size_t strlen(const char* s);
+
 void* memset(void* s, int c, size_t n);
 
 #endif  /* KERNEL_STRING_H */
