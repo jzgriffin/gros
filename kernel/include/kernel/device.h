@@ -19,29 +19,32 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <kernel/arch/mmu.h>
-#include <kernel/device.h>
+#ifndef KERNEL_DEVICE_H
+#define KERNEL_DEVICE_H
 
-static void initialize_devices(void)
-{
-    for (const DeviceInitializer* func = &__device_initializer_start;
-            func < &__device_initializer_end; ++func) {
-        (*func)();
-    }
-}
+#include <kernel/compiler.h>
 
-static void finalize_devices(void)
-{
-    for (const DeviceFinalizer* func = &__device_finalizer_start;
-            func < &__device_finalizer_end; ++func) {
-        (*func)();
-    }
-}
+#define DEVICE_INITIALIZER_NAME(tag, func) \
+    device_initializer_ ## tag ## _ ## func
+#define DEVICE_INITIALIZER(tag, func) \
+    DeviceInitializer \
+        DEVICE_INITIALIZER_NAME(tag, func) USED \
+        LINKER_SECTION(.device.initializer) = func
 
-int main(void)
-{
-    initialize_devices();
+#define DEVICE_FINALIZER_NAME(tag, func) \
+    device_finalizer_ ## tag ## _ ## func
+#define DEVICE_FINALIZER(tag, func) \
+    DeviceFinalizer \
+        DEVICE_FINALIZER_NAME(tag, func) USED \
+        LINKER_SECTION(.device.finalizer) = func
 
-    finalize_devices();
-    return 0;
-}
+typedef void (*DeviceInitializer)(void);
+typedef void (*DeviceFinalizer)(void);
+
+extern const DeviceInitializer __device_initializer_start;
+extern const DeviceInitializer __device_initializer_end;
+
+extern const DeviceFinalizer __device_finalizer_start;
+extern const DeviceFinalizer __device_finalizer_end;
+
+#endif  /* KERNEL_DEVICE_H */

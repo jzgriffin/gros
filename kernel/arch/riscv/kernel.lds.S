@@ -38,6 +38,20 @@ SECTIONS
 
     . = ALIGN(PAGE_SIZE);
 
+    .device.initializer :
+    {
+        __device_initializer_start = .;
+        *(.device.initializer);
+        __device_initializer_end = .;
+    }
+
+    .device.finalizer :
+    {
+        __device_finalizer_start = .;
+        *(.device.finalizer);
+        __device_finalizer_end = .;
+    }
+
     .rodata :
     {
         *(.rodata .rodata.*);
