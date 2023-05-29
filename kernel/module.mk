@@ -26,6 +26,7 @@ $(eval $(call generate-module,product))
 $(MODULE).TYPES := config elf
 
 $(MODULE).SRCS := \
+    console.c \
     main.c
 $(MODULE).INC_DIRS := include
 
