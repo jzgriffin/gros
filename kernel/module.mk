@@ -39,7 +39,7 @@ $(MODULE).CONFIG := $(strip \
     )
 
 SUBMODULES := \
-    $(board/$(BOARD).KERNEL_DEVICES) \
-    $(platform/$(PLATFORM).KERNEL_DEVICES) \
+    $(addprefix device/,$(board/$(BOARD).KERNEL_DEVICES)) \
+    $(addprefix device/,$(platform/$(PLATFORM).KERNEL_DEVICES)) \
     arch/$(ARCH) \
     lib
