@@ -54,4 +54,7 @@ size_t read_from_console(char* data, size_t size);
 size_t write_to_console(const char* data);
 bool put_to_console(char chr);
 
+size_t vcprintf(const char* restrict format, va_list arg);
+size_t cprintf(const char* restrict format, ...);
+
 #endif  /* KERNEL_CONSOLE_H */
