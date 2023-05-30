@@ -24,22 +24,52 @@
 
 #include <kernel/config.h>
 
+#ifdef __C__
 #include <stdint.h>
+#endif
 
 #if RISCV_XLEN == 32
+#   if defined(__C__)
 typedef uint32_t uint_xlen_t;
+#       define ASM_LX "lw"
+#       define ASM_SX "sw"
+#   elif defined(__ASSEMBLER__)
+#       define LX lw
+#       define SX sw
+#   endif
 #elif RISCV_XLEN == 64
+#   if defined(__C__)
 typedef uint64_t uint_xlen_t;
+#       define ASM_LX "ld"
+#       define ASM_SX "sd"
+#   elif defined(__ASSEMBLER__)
+#       define LX ld
+#       define SX sd
+#   endif
 #else
 #   error Unknown XLEN
 #endif
 
 #if RISCV_FLEN == 32
+#   if defined(__C__)
 typedef uint32_t uint_flen_t;
 typedef float float_flen_t;
+#       define ASM_FLX "fld"
+#       define ASM_FSX "fsd"
+#   elif defined(__ASSEMBLER__)
+#       define FLX fld
+#       define FSX fsd
+#   endif
 #elif RISCV_FLEN == 64
+#   if defined(__C__)
 typedef uint64_t uint_flen_t;
 typedef double float_flen_t;
+#       define ASM_FLX "fld"
+#       define ASM_FSX "fsd"
+#   elif defined(__ASSEMBLER__)
+#       define FLX fld
+#       define FSX fsd
+#   endif
 #else
 #   error Unknown FLEN
 #endif
