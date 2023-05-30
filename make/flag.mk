@@ -22,7 +22,11 @@
 CFLAGS += \
     -ffreestanding \
     -std=gnu17 \
-    -Wall -Wextra -Wpedantic \
-    -DNDEBUG -O2
+    -Wall -Wextra -Wpedantic
+ifeq ($(BUILD),release)
+    CFLAGS += -DNDEBUG -O2
+else
+    CFLAGS += -D_DEBUG -Og
+endif
 LDFLAGS += \
     -nostdlib
