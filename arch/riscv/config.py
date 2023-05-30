@@ -146,6 +146,13 @@ ABI_EXTS: dict[Abi, set[Ext]] = {
     Abi.LP64D: {Ext.D},
 }
 
+MMU_EXTS: dict[Mmu, set[Ext]] = {
+    Mmu.BARE: set(),
+    Mmu.SV32: {Ext.Zicsr},
+    Mmu.SV39: {Ext.Zicsr},
+    Mmu.SV48: {Ext.Zicsr},
+}
+
 
 def parse_xlen(spec: str) -> Xlen:
     try:
@@ -329,6 +336,13 @@ def parse_config(subarch_spec: str, abi_spec: str, mmu_spec: str) -> Configurati
     mmu = parse_mmu(mmu_spec)
     if mmu not in mmus:
         raise ConfigError(f"MMU {format_mmu(mmu)} is not in set {format_mmus(mmus)}")
+
+    if not MMU_EXTS[mmu].issubset(exts):
+        raise ConfigError(
+            f"MMU {format_mmu(mmu)} requires extension(s) "
+            f"{format_exts(MMU_EXTS[mmu].difference(exts))} "
+            f"that are not in {format_exts(exts)}"
+        )
 
     config = Configuration(
         xlen=xlen,
