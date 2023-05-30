@@ -27,22 +27,15 @@
 #if RISCV_MMU_BARE
 #    define KERNEL_BASE DRAM_BASE
 #else
-#    error Virtual memory is not implemented
-#    if RISCV_MMU_SV32  /* Two 31-bit halves. */
-#        define USER_SPACE_BASE   0x01000000
-#        define USER_SPACE_SIZE   0x7E000000
-#        define KERNEL_SPACE_BASE 0x80000000
-#        define KERNEL_SPACE_SIZE 0x80000000
+#    if RISCV_MMU_SV32
+#        error MMU Sv32 is not implemented
 #    elif RISCV_MMU_SV39  /* Two 38-bit halves. */
 #        define USER_SPACE_BASE   0x0000000001000000
 #        define USER_SPACE_SIZE   0x0000003FFE000000
 #        define KERNEL_SPACE_BASE 0xFFFFFFC000000000
 #        define KERNEL_SPACE_SIZE 0x0000004000000000
-#    elif RISCV_MMU_SV48  /* Two 47-bit halves. */
-#        define USER_SPACE_BASE   0x0000000001000000
-#        define USER_SPACE_SIZE   0x00007FFFFE000000
-#        define KERNEL_SPACE_BASE 0xFFFF800000000000
-#        define KERNEL_SPACE_SIZE 0x0000800000000000
+#    elif RISCV_MMU_SV48
+#        error MMU Sv48 is not implemented
 #    else
 #        error Unknown MMU
 #    endif
