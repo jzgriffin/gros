@@ -320,7 +320,9 @@ static void _initialize(void)
 
 static void _finalize(void)
 {
-    deregister_console(&_uart0_console);
+    /* Leave the console registered in case the kernel panics after finalizing
+     * the device.  This happens if main is allowed to return normally.
+     */
 }
 
 DEVICE_INITIALIZER(ns16550a, _initialize);

@@ -19,29 +19,27 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <kernel/main.h>
 #include <kernel/panic.h>
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdnoreturn.h>
-#include <string.h>
+#include <kernel/arch/dump.h>
+#include <kernel/arch/halt.h>
+#include <kernel/console.h>
 
-extern uint8_t* __bss_start;
-extern uint8_t* __bss_end;
-
-static void _initialize_bss(void)
+void vpanic(const char* restrict format, va_list arg)
 {
-    memset(__bss_start, 0, __bss_end - __bss_start);
+    const Registers registers = copy_registers();
+    cprintf("PANIC\n");
+    cprintf("Reason:\n");
+    vcprintf(format, arg);
+    cprintf("Registers:\n");
+    dump_registers(&registers);
+    halt();
 }
 
-noreturn void _start(size_t hart_id, void* device_tree)
+void panic(const char* restrict format, ...)
 {
-    (void)hart_id;
-    (void)device_tree;
-
-    _initialize_bss();
-
-    const int exit_code = main();
-    panic("main returned with exit code %d\n", exit_code);
+    va_list arg;
+    va_start(arg, format);
+    vpanic(format, arg);
+    va_end(arg);
 }

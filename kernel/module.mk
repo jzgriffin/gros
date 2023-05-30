@@ -27,7 +27,8 @@ $(MODULE).TYPES := config elf
 
 $(MODULE).SRCS := \
     console.c \
-    main.c
+    main.c \
+    panic.c
 $(MODULE).INC_DIRS := include
 
 $(MODULE).CONFIG.SRC := include/kernel/config.h.in

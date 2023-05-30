@@ -19,29 +19,13 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <kernel/main.h>
-#include <kernel/panic.h>
+#ifndef KERNEL_PANIC_H
+#define KERNEL_PANIC_H
 
-#include <stddef.h>
-#include <stdint.h>
+#include <stdarg.h>
 #include <stdnoreturn.h>
-#include <string.h>
 
-extern uint8_t* __bss_start;
-extern uint8_t* __bss_end;
+noreturn void vpanic(const char* restrict format, va_list arg);
+noreturn void panic(const char* restrict format, ...);
 
-static void _initialize_bss(void)
-{
-    memset(__bss_start, 0, __bss_end - __bss_start);
-}
-
-noreturn void _start(size_t hart_id, void* device_tree)
-{
-    (void)hart_id;
-    (void)device_tree;
-
-    _initialize_bss();
-
-    const int exit_code = main();
-    panic("main returned with exit code %d\n", exit_code);
-}
+#endif  /* KERNEL_PANIC_H */
