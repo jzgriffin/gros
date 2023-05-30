@@ -58,7 +58,7 @@ $($(MODULE).OBJS.lds): $(OUT_DIR)%.lds: %.lds.S
 	@$(MKDIR) $(dir $@)
 	$(call run-command,CPP $<, \
 	    $(CPP) \
-	        $($(MODULE)._CFLAGS) \
+	        $($(MODULE)._CFLAGS) -D__LINKER__ \
 		-MMD -MP -MT $@ -MF $(@:%.lds=%.lds.d) \
 		-o $@ $<)
 
