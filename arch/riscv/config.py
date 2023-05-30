@@ -369,6 +369,11 @@ def do_kernel_config(config: Configuration, args) -> int:
     for ext in config.exts:
         values.append(f"RISCV_EXT_{format_ext(ext).upper()}")
 
+    if Ext.D in config.exts:
+        values.append("RISCV_FLEN=64")
+    elif Ext.F in config.exts:
+        values.append("RISCV_FLEN=32")
+
     print(" ".join(values))
     return 0
 
