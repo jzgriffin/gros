@@ -34,4 +34,14 @@ typedef uint64_t uint_xlen_t;
 #   error Unknown XLEN
 #endif
 
+#if RISCV_FLEN == 32
+typedef uint32_t uint_flen_t;
+typedef float float_flen_t;
+#elif RISCV_FLEN == 64
+typedef uint64_t uint_flen_t;
+typedef double float_flen_t;
+#else
+#   error Unknown FLEN
+#endif
+
 #endif  /* KERNEL_ARCH_TYPES_H */
