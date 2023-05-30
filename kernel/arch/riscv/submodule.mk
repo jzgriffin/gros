@@ -21,6 +21,7 @@
 $(SUBMODULE).SRCS := \
     entry.S \
     halt.c \
+    registers.c \
     start.c
 $(SUBMODULE).LDS := kernel.lds.S
 $(SUBMODULE).INC_DIRS := include
