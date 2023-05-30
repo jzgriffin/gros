@@ -33,6 +33,19 @@ size_t strlen(const char* s)
     return n;
 }
 
+void* memcpy(void* restrict s1, const void* restrict s2, size_t n)
+{
+    /* TODO: Optimize */
+    uint8_t* p1 = s1;
+    const uint8_t* p2 = s2;
+    while (n > 0) {
+        *p1 = *p2;
+        ++p1;
+        ++p2;
+    }
+    return s1;
+}
+
 void* memset(void* s, int c, size_t n)
 {
     uint8_t* p = s;
