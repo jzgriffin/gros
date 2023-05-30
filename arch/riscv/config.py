@@ -367,7 +367,7 @@ def do_kernel_config(config: Configuration, args) -> int:
         f"RISCV_MMU_{format_mmu(config.mmu).upper()}",
     ]
     for ext in config.exts:
-        values.append(f"RISCV_ARCH_EXT_{format_ext(ext).upper()}")
+        values.append(f"RISCV_EXT_{format_ext(ext).upper()}")
 
     print(" ".join(values))
     return 0
