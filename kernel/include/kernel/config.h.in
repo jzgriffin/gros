@@ -28,7 +28,7 @@
 // __LINKER__ is only defined in .lds.S files.
 // __C__ is only defined when none of the above are defined.
 #if !defined(__ASSEMBLER_) && !defined(__LINKER__)
-#   define __C__
+    #define __C__
 #endif
 
 #endif  // KERNEL_CONFIG_H
