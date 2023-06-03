@@ -360,19 +360,9 @@ def do_xlen(config: Configuration, args) -> int:
 
 def do_kernel_config(config: Configuration, args) -> int:
     values = [
-        "ARCH_RISCV",
         f'RISCV_SUBARCH=\\"{format_config(config)}\\"',
-        f"RISCV_XLEN={format_xlen(config.xlen)}",
-        f"RISCV_ABI_{format_abi(config.abi).upper()}",
         f"RISCV_MMU_{format_mmu(config.mmu).upper()}",
     ]
-    for ext in config.exts:
-        values.append(f"RISCV_EXT_{format_ext(ext).upper()}")
-
-    if Ext.D in config.exts:
-        values.append("RISCV_FLEN=64")
-    elif Ext.F in config.exts:
-        values.append("RISCV_FLEN=32")
 
     print(" ".join(values))
     return 0

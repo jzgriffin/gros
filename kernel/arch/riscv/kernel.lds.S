@@ -72,7 +72,7 @@ SECTIONS
 
     // Align sbss at XLEN bits instead of a page boundary to maximize the
     // amount reachable through short addressing.
-    . = ALIGN(RISCV_XLEN / 8);
+    . = ALIGN(__riscv_xlen / 8);
 
     __bss_start = .;
 

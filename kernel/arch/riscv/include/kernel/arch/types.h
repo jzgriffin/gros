@@ -27,7 +27,7 @@
     #include <stdint.h>
 #endif
 
-#if RISCV_XLEN == 32
+#if __riscv_xlen == 32
     #if defined(__C__)
         typedef uint32_t uint_xlen_t;
         #define ASM_LX "lw"
@@ -36,7 +36,7 @@
         #define LX lw
         #define SX sw
     #endif
-#elif RISCV_XLEN == 64
+#elif __riscv_xlen == 64
     #if defined(__C__)
         typedef uint64_t uint_xlen_t;
         #define ASM_LX "ld"
@@ -49,28 +49,30 @@
     #error Unknown XLEN
 #endif
 
-#if RISCV_FLEN == 32
-    #if defined(__C__)
-        typedef uint32_t uint_flen_t;
-        typedef float float_flen_t;
-        #define ASM_FLX "fld"
-        #define ASM_FSX "fsd"
-    #elif defined(__ASSEMBLER__)
-        #define FLX fld
-        #define FSX fsd
+#ifdef __riscv_flen
+    #if __riscv_flen == 32
+        #if defined(__C__)
+            typedef uint32_t uint_flen_t;
+            typedef float float_flen_t;
+            #define ASM_FLX "fld"
+            #define ASM_FSX "fsd"
+        #elif defined(__ASSEMBLER__)
+            #define FLX fld
+            #define FSX fsd
+        #endif
+    #elif __riscv_flen == 64
+        #if defined(__C__)
+            typedef uint64_t uint_flen_t;
+            typedef double float_flen_t;
+            #define ASM_FLX "fld"
+            #define ASM_FSX "fsd"
+        #elif defined(__ASSEMBLER__)
+            #define FLX fld
+            #define FSX fsd
+        #endif
+    #else
+        #error Unknown FLEN
     #endif
-#elif RISCV_FLEN == 64
-    #if defined(__C__)
-        typedef uint64_t uint_flen_t;
-        typedef double float_flen_t;
-        #define ASM_FLX "fld"
-        #define ASM_FSX "fsd"
-    #elif defined(__ASSEMBLER__)
-        #define FLX fld
-        #define FSX fsd
-    #endif
-#else
-    #error Unknown FLEN
 #endif
 
 #endif  // KERNEL_ARCH_TYPES_H
