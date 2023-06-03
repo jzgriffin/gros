@@ -19,5 +19,6 @@
 # IN THE SOFTWARE.
 
 $(SUBMODULE).SRCS := \
+    stdio.c \
     string.c
 $(SUBMODULE).INC_DIRS := include

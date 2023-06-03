@@ -18,38 +18,19 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-#ifndef KERNEL_CONSOLE_H
-#define KERNEL_CONSOLE_H
+#ifndef KERNEL_STDIO_H
+#define KERNEL_STDIO_H
 
-#include <stdbool.h>
+#include <stdarg.h>
 #include <stddef.h>
-#include <stdint.h>
 
-#define CONSOLE_NAME_SIZE 32
+#define EOF (-1)
 
-typedef struct Console
-{
-    char name[CONSOLE_NAME_SIZE];
-    const void* tag;
-    void (*activate)(const struct Console*);
-    void (*deactivate)(const struct Console*);
-    size_t (*read)(const struct Console*, char*, size_t);
-    size_t (*write)(const struct Console*, const char*);
-    bool (*put)(const struct Console*, char);
-} Console;
+int snprintf(char* restrict s, size_t n, const char* restrict format, ...);
+int vsnprintf(char* restrict s, size_t n, const char* restrict format,
+    va_list arg);
 
-bool register_console(const Console* console);
-bool deregister_console(const Console* console);
-size_t get_console_count(void);
-const Console* get_console(size_t index);
-bool is_console_registered(const Console* console);
+int printf(const char* restrict format, ...);
+int vprintf(const char* restrict format, va_list arg);
 
-bool activate_console(const Console* console);
-bool deactivate_console(void);
-const Console* get_active_console(void);
-
-size_t read_from_console(char* data, size_t size);
-size_t write_to_console(const char* data);
-bool put_to_console(char chr);
-
-#endif  // KERNEL_CONSOLE_H
+#endif  // KERNEL_STDIO_H
