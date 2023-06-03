@@ -20,7 +20,7 @@
 
 #include <kernel/arch/types.h>
 
-.section .entry.text
+.section .text.entry
 .global _entry
 .type _entry, @function
 _entry:

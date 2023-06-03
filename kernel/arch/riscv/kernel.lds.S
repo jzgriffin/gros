@@ -20,22 +20,40 @@
 
 #include <kernel/arch/mmu.h>
 
+// Offset range from the global pointer that is accessible through gp-relative
+// addressing.  This range is +/-2KiB, or a 12-bit signed offset, because
+// immediate instruction arguments are 12 bits on RISC-V.
+#define GLOBAL_POINTER_OFFSET (1 << (12 - 1))
+
 OUTPUT(riscv)
 ENTRY(_entry)
 
+PHDRS
+{
+    text PT_LOAD FLAGS(5);
+    rodata PT_LOAD FLAGS(4);
+    data PT_LOAD FLAGS(6);
+}
+
 SECTIONS
 {
+    // Text and read-only data.
     . = KERNEL_BASE + KERNEL_LOAD_OFFSET;
 
     .text : AT(DRAM_BASE + KERNEL_LOAD_OFFSET)
     {
-        *(.entry.text);
+        __text_start = .;
+        *(.text.entry);
         *(.text.unlikely .text.unlikely.*);
         *(.text.startup .text.startup.*);
         *(.text .text.*);
-    }
+        __text_end = .;
+    } :text
 
-    . = ALIGN(PAGE_SIZE);
+    .rodata :
+    {
+        *(.rodata .rodata.*);
+    } :rodata
 
     .device.initializer :
     {
@@ -43,7 +61,6 @@ SECTIONS
         *(.device.initializer);
         __device_initializer_end = .;
     }
-
     .device.finalizer :
     {
         __device_finalizer_start = .;
@@ -51,24 +68,26 @@ SECTIONS
         __device_finalizer_end = .;
     }
 
-    .rodata :
-    {
-        *(.rodata .rodata.*);
-    }
+    // Writable data.
+    . = ALIGN(PAGE_SIZE);
 
     .data :
     {
+        __data_begin = .;
         *(.data .data.*);
-    }
 
-    // Position the global pointer one half-page after the start of sdata,
-    // which is followed by sbss, to maximize the amount of both that can be
-    // reached through short addressing.
+    } :data
+    // Small data sections must be adjacent to maximize the amount reachable
+    // through gp-relative addressing.
     .sdata :
     {
-        __global_pointer$ = . + (PAGE_SIZE / 2);
+        __sdata_begin = .;
+        *(.srodata .srodata.*);
         *(.sdata .sdata.*);
     }
+    __data_end = .;
+
+    . = .;  // Emit additional sections here.
 
     // The start and end of the BSS sections must be aligned at XLEN bits to
     // be efficiently cleared with XLEN-bit stores.
@@ -77,8 +96,6 @@ SECTIONS
     .sbss :
     {
         *(.sbss .sbss.*);
-        . += STACK_SIZE;
-        __stack_pointer = .;
     }
     .bss :
     {
@@ -86,6 +103,15 @@ SECTIONS
     }
     . = ALIGN(__riscv_xlen / 8);
     __bss_end = .;
+
+    // Place the global pointer such that most of the small data is reachable.
+    __global_pointer$ = __sdata_begin + GLOBAL_POINTER_OFFSET;
+
+    . += STACK_SIZE;
+    __stack_pointer = .;
+
+    // End of the kernel.
+    __end = .;
 
     /DISCARD/ :
     {
