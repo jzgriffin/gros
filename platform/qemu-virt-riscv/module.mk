@@ -36,6 +36,9 @@ $(MODULE).MEMORY_MAP.ENTRIES += UART0
 $(MODULE).KERNEL_CONFIG += UART0_REGISTER_WIDTH=1
 $(MODULE).KERNEL_DEVICES += ns16550a
 
+# Debug
+$(MODULE).KERNEL_DEBUG = ns16550a
+
 QEMU ?= qemu-system-riscv64
 QEMUFLAGS += -serial mon:stdio -machine virt -nographic
 MODULES += emulator

@@ -21,14 +21,15 @@
 #include <kernel/panic.h>
 
 #include <kernel/arch/halt.h>
+#include <kernel/debug.h>
 
 #include <stdio.h>
 
 void vpanic(const char* restrict format, va_list arg)
 {
-    printf("PANIC\n");
-    printf("Reason:\n");
-    vprintf(format, arg);
+    dprintf("PANIC\n");
+    dprintf("Reason:\n");
+    vdprintf(format, arg);
     halt();
 }
 

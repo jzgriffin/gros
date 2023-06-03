@@ -19,3 +19,7 @@
 # IN THE SOFTWARE.
 
 $(SUBMODULE).SRCS := device.c
+$(SUBMODULE).INC_DIRS := include
+ifeq ($(filter 1,$($(SUBMODULE).DEBUG)),1)
+    $(SUBMODULE).SRCS += debug.c
+endif

@@ -19,22 +19,23 @@
 // DEALINGS IN THE SOFTWARE.
 
 #include <kernel/debug.h>
-#include <kernel/main.h>
-#include <kernel/panic.h>
 
-#include <stddef.h>
-#include <stdio.h>
-#include <stdnoreturn.h>
+#include <kernel/device/ns16550a/ns16550a.h>
 
-noreturn void _start(size_t hart_id, void* device_tree)
+void dputc(char c)
 {
-    (void)hart_id;
-    (void)device_tree;
+    // Write the character without waiting for THR.
+    NS16550A_WRITE_FIELD(&ns16550a_uart0, THR, CHR, c);
+}
 
-    initialize_debug();
-    dprintf("Starting hart %u with device tree pointer %p\n", hart_id,
-        device_tree);
+void dputs(const char* s)
+{
+    for (; *s != '\0'; ++s) {
+        dputc(*s);
+    }
+}
 
-    const int exit_code = main();
-    panic("main returned with exit code %d\n", exit_code);
+void initialize_debug(void)
+{
+    // Assume SBI initializes UART0.
 }

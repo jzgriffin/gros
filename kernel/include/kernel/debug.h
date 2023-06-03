@@ -18,23 +18,11 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-#include <kernel/debug.h>
-#include <kernel/main.h>
-#include <kernel/panic.h>
+#ifndef KERNEL_DEBUG_H
+#define KERNEL_DEBUG_H
 
-#include <stddef.h>
-#include <stdio.h>
-#include <stdnoreturn.h>
+void dputc(char c);
+void dputs(const char* s);
+void initialize_debug(void);
 
-noreturn void _start(size_t hart_id, void* device_tree)
-{
-    (void)hart_id;
-    (void)device_tree;
-
-    initialize_debug();
-    dprintf("Starting hart %u with device tree pointer %p\n", hart_id,
-        device_tree);
-
-    const int exit_code = main();
-    panic("main returned with exit code %d\n", exit_code);
-}
+#endif  // KERNEL_DEBUG_H

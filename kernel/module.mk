@@ -40,7 +40,17 @@ $(MODULE).CONFIG := $(strip \
     $(arch/$(ARCH).KERNEL_CONFIG) \
     )
 
-SUBMODULES := \
+SUBMODULES :=
+
+$(MODULE).DEBUG := $(addprefix device/,$(platform/$(PLATFORM).KERNEL_DEBUG))
+ifneq ($(MODULE).DEBUG,)
+    SUBMODULES += $($(MODULE).DEBUG)
+    $(MODULE)/$($(MODULE).DEBUG).DEBUG := 1
+else
+    $(error Kernel debug device for platform/$(PLATFORM) not specified)
+endif
+
+SUBMODULES += \
     $(addprefix device/,$(board/$(BOARD).KERNEL_DEVICES)) \
     $(addprefix device/,$(platform/$(PLATFORM).KERNEL_DEVICES)) \
     arch/$(ARCH) \

@@ -20,6 +20,8 @@
 
 #include <kernel/device.h>
 
+#include <stdio.h>
+
 static void _initialize_devices(void)
 {
     for (const DeviceInitializer* func = &__device_initializer_start;
@@ -38,6 +40,8 @@ static void _finalize_devices(void)
 
 int main(void)
 {
+    dprintf("Entered main\n");
+
     _initialize_devices();
 
     _finalize_devices();

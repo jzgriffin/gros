@@ -33,4 +33,7 @@ int vsnprintf(char* restrict s, size_t n, const char* restrict format,
 int printf(const char* restrict format, ...);
 int vprintf(const char* restrict format, va_list arg);
 
+int dprintf(const char* restrict format, ...);
+int vdprintf(const char* restrict format, va_list arg);
+
 #endif  // KERNEL_STDIO_H

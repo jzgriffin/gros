@@ -21,6 +21,7 @@
 #include <stdio.h>
 
 #include <kernel/console.h>
+#include <kernel/debug.h>
 
 #include <limits.h>
 #include <stdbool.h>
@@ -29,6 +30,7 @@
 typedef enum PrintType
 {
     print_type_measure,
+    print_type_debug,
     print_type_console,
     print_type_string,
 } PrintType;
@@ -63,6 +65,9 @@ static void _finalize_print(PrintState* state)
         case print_type_measure:
             break;
 
+        case print_type_debug:
+            break;
+
         case print_type_console:
             break;
 
@@ -77,6 +82,10 @@ static void _do_print_chr(PrintState* state, char c)
     if (state->length + 1 < state->capacity) {
         switch (state->type) {
             case print_type_measure:
+                break;
+
+            case print_type_debug:
+                dputc(c);
                 break;
 
             case print_type_console:
@@ -291,6 +300,31 @@ int vprintf(const char* restrict format, va_list arg)
         .capacity = INT_MAX,
         .length = 0,
         .type = print_type_console,
+    };
+    va_copy(state.arg, arg);
+    return _do_print(&state);
+}
+
+int dprintf(const char* restrict format, ...)
+{
+    va_list arg;
+    va_start(arg, format);
+    int length = vdprintf(format, arg);
+    va_end(arg);
+    return length;
+}
+
+int vdprintf(const char* restrict format, va_list arg)
+{
+    if (format == NULL) {
+        return 0;
+    }
+
+    PrintState state = {
+        .format = format,
+        .capacity = INT_MAX,
+        .length = 0,
+        .type = print_type_debug,
     };
     va_copy(state.arg, arg);
     return _do_print(&state);
