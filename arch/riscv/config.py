@@ -364,6 +364,9 @@ def do_kernel_config(config: Configuration, args) -> int:
         f"RISCV_MMU_{format_mmu(config.mmu).upper()}",
     ]
 
+    if config.mmu != Mmu.BARE:
+        values.append("KERNEL_VM")
+
     print(" ".join(values))
     return 0
 
