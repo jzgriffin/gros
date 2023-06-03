@@ -28,6 +28,7 @@
 #endif
 
 #if __riscv_xlen == 32
+    #define _riscv_xlen_bytes 4
     #if defined(__C__)
         typedef uint32_t uint_xlen_t;
         #define ASM_LX "lw"
@@ -37,6 +38,7 @@
         #define SX sw
     #endif
 #elif __riscv_xlen == 64
+    #define __riscv_xlen_bytes 8
     #if defined(__C__)
         typedef uint64_t uint_xlen_t;
         #define ASM_LX "ld"
@@ -51,6 +53,7 @@
 
 #ifdef __riscv_flen
     #if __riscv_flen == 32
+        #define __riscv_flen_bytes 4
         #if defined(__C__)
             typedef uint32_t uint_flen_t;
             typedef float float_flen_t;
@@ -61,6 +64,7 @@
             #define FSX fsd
         #endif
     #elif __riscv_flen == 64
+        #define __riscv_flen_bytes 8
         #if defined(__C__)
             typedef uint64_t uint_flen_t;
             typedef double float_flen_t;
