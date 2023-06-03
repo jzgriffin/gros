@@ -19,10 +19,8 @@
 # IN THE SOFTWARE.
 
 $(SUBMODULE).SRCS := \
-    dump.c \
     entry.S \
     halt.c \
-    registers.c \
     start.c
 $(SUBMODULE).LDS := kernel.lds.S
 $(SUBMODULE).INC_DIRS := include

@@ -20,18 +20,14 @@
 
 #include <kernel/panic.h>
 
-#include <kernel/arch/dump.h>
 #include <kernel/arch/halt.h>
 #include <kernel/console.h>
 
 void vpanic(const char* restrict format, va_list arg)
 {
-    const Registers registers = copy_registers();
     cprintf("PANIC\n");
     cprintf("Reason:\n");
     vcprintf(format, arg);
-    cprintf("Registers:\n");
-    dump_registers(&registers);
     halt();
 }
 
