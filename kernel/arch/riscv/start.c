@@ -28,9 +28,6 @@
 
 noreturn void _start(size_t hart_id, void* device_tree)
 {
-    (void)hart_id;
-    (void)device_tree;
-
     initialize_debug();
     dprintf("Starting hart %u with device tree pointer %p\n", hart_id,
         device_tree);
