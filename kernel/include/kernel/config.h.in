@@ -23,12 +23,4 @@
 
 #pragma config
 
-// Shortcut for disabling C code during preprocessing.
-// __ASSEMBLER__ is only defined in .S files.
-// __LINKER__ is only defined in .lds.S files.
-// __C__ is only defined when none of the above are defined.
-#if !defined(__ASSEMBLER_) && !defined(__LINKER__)
-    #define __C__
-#endif
-
 #endif  // KERNEL_CONFIG_H

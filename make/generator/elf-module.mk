@@ -74,7 +74,7 @@ $($(MODULE).OBJS.c): $(OUT_DIR)%.c.o: %.c
 	@$(MKDIR) $(dir $@)
 	$(call run-command,CC $<, \
 	    $(CC) \
-	        $($(MODULE)._CFLAGS) \
+	        $($(MODULE)._CFLAGS) -D__C__ \
 		-MMD -MP -MT $@ -MF $(@:%.o=%.d) \
 		-o $@ -c $<)
 
@@ -88,10 +88,10 @@ $($(MODULE).OBJS.S): MODULE := $(MODULE)
 $($(MODULE).OBJS.S): $($(MODULE).EXTRA_PREREQS)
 $($(MODULE).OBJS.S): $(OUT_DIR)%.S.o: %.S
 	@$(MKDIR) $(dir $@)
-	$(call run-command,CC $<, \
+	$(call run-command,AS $<, \
 	    $(CC) \
 	        $($(MODULE)._CFLAGS) \
-	        $($(MODULE)._ASFLAGS) \
+	        $($(MODULE)._ASFLAGS) -D__ASSEMBLER__ \
 		-MMD -MP -MT $@ -MF $(@:%.o=%.d) \
 		-o $@ -c $<)
 
