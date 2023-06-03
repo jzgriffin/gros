@@ -37,7 +37,7 @@ _entry:
     // current global pointer.
 .option push
 .option norelax
-    la gp, __global_pointer$
+    lla     gp, __global_pointer$
 .option pop
 
     // Clear the BSS section.  NOTE: __bss_start/_bss_end must be aligned at
