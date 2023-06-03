@@ -19,12 +19,10 @@
 // DEALINGS IN THE SOFTWARE.
 
 #include <kernel/arch/types.h>
+#include <kernel/assembler.h>
 
 .section .text.entry
-.global _entry
-.type _entry, @function
-_entry:
-.cfi_startproc
+FUNCTION(_entry)
     // This function receives the following parameters in supervisor mode:
     //   a0 - Hart ID
     //   a1 - Address of device tree structure
@@ -57,4 +55,4 @@ _entry:
     // initialization, calls main, and enters a halting loop if main ever
     // returns.
     tail _start
-.cfi_endproc
+END_FUNCTION(_entry)
