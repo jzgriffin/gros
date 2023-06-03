@@ -79,7 +79,7 @@ SECTIONS
     .sbss :
     {
         *(.sbss .sbss.*);
-        . += (PAGE_SIZE / 2);  // Reserve one half-page of stack.
+        . += STACK_SIZE;
         __stack_pointer = .;
     }
 

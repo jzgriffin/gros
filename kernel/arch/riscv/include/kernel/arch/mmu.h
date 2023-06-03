@@ -45,4 +45,6 @@
 #define PAGE_SIZE (1 << PAGE_BITS)
 #define PAGE_MASK (~(PAGE_SIZE - 1))
 
+#define STACK_SIZE PAGE_SIZE
+
 #endif  // KERNEL_ARCH_MMU_H
