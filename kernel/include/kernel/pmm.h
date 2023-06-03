@@ -18,23 +18,19 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-#include <kernel/debug.h>
-#include <kernel/main.h>
-#include <kernel/panic.h>
-#include <kernel/pmm.h>
+#ifndef KERNEL_PMM_H
+#define KERNEL_PMM_H
+
+#include <kernel/arch/memory.h>
 
 #include <stddef.h>
-#include <stdio.h>
-#include <stdnoreturn.h>
 
-noreturn void _start(size_t hart_id, void* device_tree)
-{
-    initialize_debug();
-    dprintf("Starting hart %u with device tree pointer %p\n", hart_id,
-        device_tree);
+size_t allocate_physical_pages(PhysicalAddress* addrs, size_t count);
+PhysicalAddress allocate_physical_page(void);
 
-    initialize_pmm();
+void free_physical_pages(PhysicalAddress* addrs, size_t count);
+void free_physical_page(PhysicalAddress addr);
 
-    const int exit_code = main();
-    panic("main returned with exit code %d\n", exit_code);
-}
+void initialize_pmm(void);
+
+#endif  // KERNEL_PMM_H
