@@ -24,11 +24,13 @@
 #include <kernel/config.h>
 
 #if RISCV_MMU_BARE
-    #define KERNEL_BASE DRAM_BASE
+    #define RISCV_MMU_BITS 0
+    #define KERNEL_BASE    DRAM_BASE
 #else
     #if RISCV_MMU_SV32
         #error MMU Sv32 is not implemented
     #elif RISCV_MMU_SV39  // Two 38-bit halves.
+        #define RISCV_MMU_BITS    39
         #define USER_SPACE_BASE   0x0000000000000000
         #define USER_SPACE_SIZE   0x0000004000000000
         #define KERNEL_SPACE_BASE 0xFFFFFFC000000000
