@@ -18,6 +18,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
+#include <kernel/arch/mmu.h>
 #include <kernel/arch/types.h>
 #include <kernel/assembler.h>
 
@@ -38,6 +39,9 @@ FUNCTION(_entry)
     lla     gp, __global_pointer$
 .option pop
 
+    // Set the stack pointer.
+    lla     sp, _stack_top
+
     // Clear the BSS section.  NOTE: __bss_start/_bss_end must be aligned at
     // XLEN bits for SX to be efficient across implementations.
     lla     t0, __bss_start
@@ -48,11 +52,17 @@ FUNCTION(_entry)
     bltu    t0, t1, 1b
 2:
 
-    // Set the stack pointer.
-    la sp, __stack_pointer
-
     // Tail call into the C start function which does architecture-specific
     // initialization, calls main, and enters a halting loop if main ever
     // returns.
     tail _start
 END_FUNCTION(_entry)
+
+// Reserve the stack.
+.section .bss
+.align __riscv_xlen_bytes
+OBJECT(_stack)
+    .skip   STACK_SIZE
+END_OBJECT(_stack)
+OBJECT(_stack_top)
+END_OBJECT(_stack_top)

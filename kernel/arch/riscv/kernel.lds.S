@@ -107,9 +107,6 @@ SECTIONS
     // Place the global pointer such that most of the small data is reachable.
     __global_pointer$ = __sdata_begin + GLOBAL_POINTER_OFFSET;
 
-    . += STACK_SIZE;
-    __stack_pointer = .;
-
     // End of the kernel.
     __end = .;
 
