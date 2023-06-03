@@ -22,24 +22,12 @@
 #include <kernel/panic.h>
 
 #include <stddef.h>
-#include <stdint.h>
 #include <stdnoreturn.h>
-#include <string.h>
-
-extern uint8_t* __bss_start;
-extern uint8_t* __bss_end;
-
-static void _initialize_bss(void)
-{
-    memset(__bss_start, 0, __bss_end - __bss_start);
-}
 
 noreturn void _start(size_t hart_id, void* device_tree)
 {
     (void)hart_id;
     (void)device_tree;
-
-    _initialize_bss();
 
     const int exit_code = main();
     panic("main returned with exit code %d\n", exit_code);

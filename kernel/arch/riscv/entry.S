@@ -18,6 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
+#include <kernel/arch/types.h>
+
 .section .entry.text
 .global _entry
 .type _entry, @function
@@ -37,6 +39,16 @@ _entry:
 .option norelax
     la gp, __global_pointer$
 .option pop
+
+    // Clear the BSS section.  NOTE: __bss_start/_bss_end must be aligned at
+    // XLEN bits for SX to be efficient across implementations.
+    lla     t0, __bss_start
+    lla     t1, __bss_end
+    bgeu    t0, t1, 2f
+1:  SX      zero, (t0)
+    addi    t0, t0, __riscv_xlen / 8
+    bltu    t0, t1, 1b
+2:
 
     // Set the stack pointer.
     la sp, __stack_pointer

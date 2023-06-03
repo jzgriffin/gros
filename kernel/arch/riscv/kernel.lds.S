@@ -70,24 +70,21 @@ SECTIONS
         *(.sdata .sdata.*);
     }
 
-    // Align sbss at XLEN bits instead of a page boundary to maximize the
-    // amount reachable through short addressing.
+    // The start and end of the BSS sections must be aligned at XLEN bits to
+    // be efficiently cleared with XLEN-bit stores.
     . = ALIGN(__riscv_xlen / 8);
-
     __bss_start = .;
-
     .sbss :
     {
         *(.sbss .sbss.*);
         . += STACK_SIZE;
         __stack_pointer = .;
     }
-
     .bss :
     {
         *(.bss .bss.*);
     }
-
+    . = ALIGN(__riscv_xlen / 8);
     __bss_end = .;
 
     /DISCARD/ :
