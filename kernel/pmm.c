@@ -63,6 +63,12 @@ void free_physical_page(PhysicalAddress addr)
     free_physical_pages(&addr, 1);
 }
 
+size_t get_dram_size(void)
+{
+    // TODO: Get actual size of DRAM from FDT.
+    return 128 * 1024 * 1024;
+}
+
 void initialize_pmm(void)
 {
     PhysicalAddress start = ROUND_PAGE_UP((PhysicalAddress)&__end);

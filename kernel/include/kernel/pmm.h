@@ -31,6 +31,8 @@ PhysicalAddress allocate_physical_page(void);
 void free_physical_pages(PhysicalAddress* addrs, size_t count);
 void free_physical_page(PhysicalAddress addr);
 
+size_t get_dram_size(void);
+
 void initialize_pmm(void);
 
 #endif  // KERNEL_PMM_H
