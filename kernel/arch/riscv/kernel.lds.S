@@ -37,7 +37,7 @@ PHDRS
 
 SECTIONS
 {
-    // Text and read-only data.
+    // Text.
     . = KERNEL_BASE + KERNEL_LOAD_OFFSET;
 
     .text : AT(DRAM_BASE + KERNEL_LOAD_OFFSET)
@@ -50,8 +50,12 @@ SECTIONS
         __text_end = .;
     } :text
 
+    // Read-only data.
+    . = ALIGN(PAGE_SIZE);
+
     .rodata :
     {
+        __rodata_start = .;
         *(.rodata .rodata.*);
     } :rodata
 
@@ -67,6 +71,8 @@ SECTIONS
         *(.device.finalizer);
         __device_finalizer_end = .;
     }
+
+    __rodata_end = .;
 
     // Writable data.
     . = ALIGN(PAGE_SIZE);
