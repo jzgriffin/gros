@@ -21,14 +21,20 @@
 # Generates a submodule by its directory $(1).  MODULE must be set to the
 # parent module.
 define generate-submodule
-    ifeq ($(filter $(1),$(SUBMODULES_GENERATED)),)
-        SUBMODULES_GENERATED := $(sort $(SUBMODULES_GENERATED) $(1))
+    ifeq ($(SUBMODULE),)
+        _SUBMODULE := $(MODULE)/$(1)
+    else
+        _SUBMODULE := $(SUBMODULE)/$(1)
+    endif
+    ifeq ($$(filter $$(_SUBMODULE),$(SUBMODULES_GENERATED)),)
+        SUBMODULES_GENERATED := $$(sort $(SUBMODULES_GENERATED) $$(_SUBMODULE))
         SUBMODULE_STACK := $$(strip $$(SUBMODULE_STACK) $(SUBMODULE))
-        SUBMODULE := $(MODULE)/$(1)
-        $$(SUBMODULE).INNER_SRC_DIR := $(1)/
-        $$(SUBMODULE).SRC_DIR := $(MODULE)/$(1)/
+        SUBMODULE := $$(_SUBMODULE)
+        $$(SUBMODULE).INNER_SRC_DIR := $$(subst $(MODULE)/,,$$(SUBMODULE)/)
+        $$(SUBMODULE).SRC_DIR := $$(SUBMODULE)/
         $$(info Generating $$(SUBMODULE))
         include $$($$(SUBMODULE).SRC_DIR)submodule.mk
+        $$(eval $$(call generate-submodules))
         $$(foreach type,$$($$(MODULE).TYPES), \
             $$(eval -include make/generator/$$(type)-submodule.mk))
         SUBMODULE := $$(lastword $$(SUBMODULE_STACK))
