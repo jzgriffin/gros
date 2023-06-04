@@ -22,6 +22,7 @@
 
 #include <kernel/arch/mmu.h>
 
+#include <assert.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -37,6 +38,7 @@ static PhysicalAddress _next = 0;
 
 size_t allocate_physical_pages(PhysicalAddress* addrs, size_t count)
 {
+    assert(addrs != NULL);
     dprintf("Allocating %u physical pages into %p\n", count, addrs);
     size_t i = 0;
     for (; i < count; ++i) {
@@ -55,6 +57,7 @@ PhysicalAddress allocate_physical_page(void)
 
 void free_physical_pages(PhysicalAddress* addrs, size_t count)
 {
+    assert(addrs != NULL);
     dprintf("Freeing %u physical pages at %p\n", count, addrs);
 }
 
