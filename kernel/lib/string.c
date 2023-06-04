@@ -20,10 +20,12 @@
 
 #include <string.h>
 
+#include <assert.h>
 #include <stdint.h>
 
 size_t strlen(const char* s)
 {
+    assert(s != NULL);
     size_t n = 0;
     while (*s != '\0') {
         ++s;
@@ -34,6 +36,8 @@ size_t strlen(const char* s)
 
 void* memcpy(void* restrict s1, const void* restrict s2, size_t n)
 {
+    assert(s1 != NULL);
+    assert(s2 != NULL);
     // TODO: Optimize.
     uint8_t* p1 = s1;
     const uint8_t* p2 = s2;
@@ -47,6 +51,7 @@ void* memcpy(void* restrict s1, const void* restrict s2, size_t n)
 
 void* memset(void* s, int c, size_t n)
 {
+    assert(s != NULL);
     uint8_t* p = s;
     while (n > 0) {
         *p = (uint8_t)c;
