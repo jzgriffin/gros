@@ -18,6 +18,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
+#include <kernel/arch/memory.h>
 #include <kernel/debug.h>
 #include <kernel/main.h>
 #include <kernel/panic.h>

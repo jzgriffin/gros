@@ -18,7 +18,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-#include <kernel/arch/mmu.h>
+#include <kernel/arch/memory.h>
 
 // Offset range from the global pointer that is accessible through gp-relative
 // addressing.  This range is +/-2KiB, or a 12-bit signed offset, because

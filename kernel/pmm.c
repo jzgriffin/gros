@@ -20,7 +20,7 @@
 
 #include <kernel/pmm.h>
 
-#include <kernel/arch/mmu.h>
+#include <kernel/arch/memory.h>
 
 #include <assert.h>
 #include <stddef.h>

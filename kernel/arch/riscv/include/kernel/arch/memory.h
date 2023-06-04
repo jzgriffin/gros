@@ -22,7 +22,37 @@
 #define KERNEL_ARCH_MEMORY_H
 
 #include <kernel/arch/types.h>
+#include <kernel/config.h>
 
-typedef uint_xlen_t PhysicalAddress;
+#if RISCV_MMU_BARE
+    #define KERNEL_BASE DRAM_BASE
+#else
+    #if RISCV_MMU_SV32
+        #error MMU Sv32 is not implemented
+    #elif RISCV_MMU_SV39  // Two 38-bit halves.
+        #define USER_SPACE_BASE   0x0000000000000000
+        #define USER_SPACE_SIZE   0x0000004000000000
+        #define KERNEL_SPACE_BASE 0xFFFFFFC000000000
+        #define KERNEL_SPACE_SIZE 0x0000004000000000
+    #elif RISCV_MMU_SV48
+        #error MMU Sv48 is not implemented
+    #else
+        #error Unknown MMU
+    #endif
+    #define KERNEL_BASE KERNEL_SPACE_BASE + DRAM_BASE
+#endif
+
+#define PAGE_BITS 12
+#define PAGE_SIZE (1 << PAGE_BITS)
+#define PAGE_MASK (~(PAGE_SIZE - 1))
+
+#define ROUND_PAGE_DOWN(x) (((x) >> PAGE_BITS) << PAGE_BITS)
+#define ROUND_PAGE_UP(x) (ROUND_PAGE_DOWN((x) + (PAGE_SIZE - 1)))
+
+#define STACK_SIZE PAGE_SIZE
+
+#ifdef __C__
+    typedef uint_xlen_t PhysicalAddress;
+#endif
 
 #endif  // KERNEL_ARCH_MEMORY_H
