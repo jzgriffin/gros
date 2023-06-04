@@ -73,7 +73,7 @@ SECTIONS
 
     .data :
     {
-        __data_begin = .;
+        __data_start = .;
         *(.data .data.*);
 
     } :data
@@ -81,7 +81,7 @@ SECTIONS
     // through gp-relative addressing.
     .sdata :
     {
-        __sdata_begin = .;
+        __sdata_start = .;
         *(.srodata .srodata.*);
         *(.sdata .sdata.*);
     }
@@ -105,7 +105,7 @@ SECTIONS
     __bss_end = .;
 
     // Place the global pointer such that most of the small data is reachable.
-    __global_pointer$ = __sdata_begin + GLOBAL_POINTER_OFFSET;
+    __global_pointer$ = __sdata_start + GLOBAL_POINTER_OFFSET;
 
     // End of the kernel.
     __end = .;
