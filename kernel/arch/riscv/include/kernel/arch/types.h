@@ -22,10 +22,19 @@
 #define KERNEL_ARCH_TYPES_H
 
 #include <kernel/config.h>
+#include <kernel/types.h>
 
 #ifdef __C__
     #include <stdint.h>
 #endif
+
+// XLEN literals use the long suffix on both RV32 and RV64.
+// RV32 uses the ILP32 ABI, in which long is 32 bits.
+// RV64 uses the LP64 ABI, in which long is 64 bits.
+#define LITERAL_X(x)  LITERAL(x, l)
+#define LITERAL_UX(x) LITERAL(x, ul)
+#define BIT_X(x)  BIT(x, l)
+#define BIT_UX(x) BIT(x, ul)
 
 #if __riscv_xlen == 32
     #define _riscv_xlen_bytes 4
